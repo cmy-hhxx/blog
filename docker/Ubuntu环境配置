@@ -25,6 +25,7 @@ sudo vim /etc/docker/daemon.json
 
 ## 保存退出
 
+
 ## 重新加载配置文件和重启docker
 
 sudo systemctl daemon-reload
@@ -61,5 +62,6 @@ sudo systemctl restart docker
 ## .brashrc
 ## .tumx-conf
 ## .vimrc
+
 
 ```
