@@ -8,7 +8,6 @@ man docker COMMAND
 docker COMMAND --help
 ```
 
----
 
 ## man docker
 ```text
@@ -16,8 +15,6 @@ The Docker CLI has over 30 commands.
 The commands are listed below and each has its own man page which explain usage and arguments.
 docker option
 ```
-
----
 
 ## docker -h
 ```text
@@ -163,7 +160,6 @@ synopsis = docker top CONTAINER [ps CONTAINER]
 
 ```
 
----
 
 ## docker image -h
 ```text
@@ -201,7 +197,6 @@ synopsis = docker image tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
 
 ```
 
----
 
 ## man docker-network
 ```text
@@ -225,7 +220,6 @@ synopsis = docker network rm NETWORK [NETWORKS]
 
 ```
 
----
 
 ## man docker-run
 ```text
