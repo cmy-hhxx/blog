@@ -53,7 +53,6 @@ sudo systemctl restart docker
 ## python 3
 ## jdk 1.8 && jdk 11
 ## mysql 8
-## mininet
 ## ryu
 ## OpenDayLight
 
