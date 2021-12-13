@@ -10,7 +10,7 @@ Servlet请求首先发给HTTP服务器，HTTP服务器只负责静态页面的�
 因此，Servlet请求会转交给Servlet容器，Servlet容器会根据映射关系调用相应的Servlet，将处理结果返回给Servlet容器，通过HTTP服务器发回给客户端。
 ## Servlet 生命周期
 
-![lifecycle](img/lifecycle.png) 
+![lifecycle](img/lifecycle.png)
 
 1. 第一个到达服务器的HTTP请求被委派到Servlet容器
 2. Servlet容器在调用service方法前，加载servlet
@@ -87,5 +87,4 @@ Servlet请求首先发给HTTP服务器，HTTP服务器只负责静态页面的�
 3. servletcontext.removeAttribute(String name)， 在servletcontext空间中删除名称为name的对象
 
 ## cookie session ServletContext 关联
-
 ![relation](img/relation.png)
