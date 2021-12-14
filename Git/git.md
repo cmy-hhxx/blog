@@ -44,8 +44,6 @@ git中的push是默认不区分大小写的，然后我把docker 文件夹改成
 我沉思了一会，才想起来， 我他妈改过GitHub的密码，没在windows本地改呢。我去控制面板里找到凭证管理，windows凭证管理，输入了修改过后的密码。
 我以为大功告成，结果我在本地完美，全是大写的目录，强迫症看了都说好，我在push上去，提示版本不一致，让我修改，我修改个球， 我直接git push -f， 暴力出奇迹，我满心欢喜，上去一看，我在网页删掉的两个文件又又回来了，又折腾了一次git pull ， git push -f ，还是不行。 我气死了。最后我找到了解决办法，git rm -r --cached <目录名\>,然后git push。解决！将强迫症的意志继承到底！
 
-![obsessive-compulsive-disorder](img/obsessive-compulsive-disorder.png)
-
 
 ## man git
 ```text
