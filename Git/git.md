@@ -35,9 +35,9 @@
 git中的push是默认不区分大小写的，然后我把docker 文件夹改成 Docker，
 兴致冲冲的去GitHub上看我的笔记，怎么docker还是docker，本来无所谓，但谁让我是强迫症，我看的那叫一个难受，我就想给他改过来。但是网上有些博客真的害人。
 我看那些写博客的人都瓜兮兮的，我直接按照博客git mv， 然后我就裂开了，后来我找到一个不那么瓜的人写的博客，说git 默认不区分大小写，我们只需要将区分大小写的全局设置打开，在git push就行，我一看这个就靠谱，前面一个git mv的也太捞了。
->git config --get core.ignorecase # 查看git 的设置
-git config core.ignorecase false # 设置大小写敏感
-git rm -r --cached <目录/文件>  # 远程有俩相同目录，通过这种方式清除掉，然后提交记录
+>git config --get core.ignorecase # 查看git 的设置  
+>git config core.ignorecase false # 设置大小写敏感  
+>git rm -r --cached <目录/文件>  # 远程有俩相同目录，通过这种方式清除掉，然后提交记录
 
 
 我得到了两个docker目录，一个大写的，是我想要的，一个小写的。我这里惯性思维，直接删，然后再pull到本地，我真牛。结果pull到本地，permission denied。
