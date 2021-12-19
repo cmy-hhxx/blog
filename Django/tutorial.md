@@ -121,4 +121,5 @@ django.get_version()
             ![sql](img/sql.png) 
         
         - ![docs](img/docs.png) 
-        
+    - 可以通过`python3 manage.py shell`来更好地了解Django为我们创建的各种API
+    - 可以给模型添加符合逻辑的自定义方法
