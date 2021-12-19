@@ -26,8 +26,8 @@ django.get_version()
 
 ## mysite 入门
 1. 进入你想放网站的目录，执行`django-admin startproject mysite`
-2. tree，看一下目录结构
-![structure](img/structure.png)
+2. tree，看一下目录结构  
+    ![structure](img/structure.png)
 
     - mysite 是你项目的容器，根目录对Django没有影响，你可以随意更改
     - manage.py 一个让你用各种方式管理Django的命令行工具 
@@ -88,4 +88,37 @@ django.get_version()
         - 在投票应用中，需要创建两个模型，问题和选项。
         - 问题包括问题描述和发布时间
         - 选项包括选项描述和当前票数
+        ```python 
+        from django.db import models
+        
+        class Question(models.Models):
+            question_text = models.CharField(max_length=200)
+            pub_date = models.DateTimeField('date published')
+        
+        class Choice(models.Models):
+            qustion = models.ForeignKey(Qustion, on_delete=CASCADE)
+            choice_text = models.CharField(max_length=200)
+            votes = models.IntegerField(default=0)
+        ```
     
+    - 将cmy这个app加载到mysite/settings.py中的INSTALLED_APPS中  
+    添加`'cmy.apps.CmyConfig',`
+        ![installed_apps](img/installed_apps.png) 
+    - 现在你的Django项目会包括cmy这个应用，回到mysite根目录，执行`python3 manage.py makemigrations cmy `
+    
+        ![makemigrations](img/makemigrations.png) 
+    
+    - 接着执行`python3 manage.py migrate`
+    - 重启服务`python3 manage.py runserver 0.0.0.0:8000`
+    
+        ![cmy_hello](img/cmy_hello.png) 
+        
+    - makemigrations迁移命令会执行哪些sql语句呢？
+        - 什么是迁移？  
+            迁移是Django对于模型定义，也就是你的数据库结构的变化的存储形式  
+        - 执行迁移后，产生了哪些sql语句
+
+            ![sql](img/sql.png) 
+        
+        - ![docs](img/docs.png) 
+        
