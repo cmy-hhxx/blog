@@ -205,4 +205,140 @@ pygmentize -S monokai -f html -a .codehilite > monokai.css
 
 ```
 
-### 
+### 文章删除
+```
+# 增加articles/views.py article_delete函数
+def article_delete(request, id):
+    article = ArticlePost.objects.get(id=id)
+    article.delete()
+    return redirect("articles:articles_list")
+    
+# 增加路由
+vim articles/urls.py
+urlpatterns = {
+    # ...
+    path('article_delete/', views.article_delete, name='article_delete')
+}
+
+# 修改templates/articles/details.html 在相应的盒子中加入a标签
+<div class="col-12 alert alert-success">作者：{{ article.author }} <a href="{% url "articles_article_delete" article.id %}"> 删除文章</a>
+
+# 增加弹窗防止手抖误删
+## 添加layer web组件
+vim templates/base.html
+在jquery-3.6.0.js后面引入layer.js
+<script src="{% static 'layer/layer.js'%}"></script>
+
+## 给删除文章添加onclick confirm_delete函数
+<script>
+    function confirm_delete(){
+            layer.open({
+                    title: "确认删除",
+                    content: "确认删除这篇文章吗？",
+                    yes: function(index, layero){
+                            location.href='{% url "articles:article_delete" article.id %}'
+                        },
+                })
+        }
+</script>
+
+# 如何避免CSRF跨域攻击？
+## 利用Django中间件对csrf_token的支持
+vim templates/articles/detail.html
+<div>
+# ...
+<a href="#" onclick="confirm_csrf_avoidance_delete">删除文章</a>
+<form
+        style="display:none;"
+        id="csrf_avoidance_delete"
+        action="{% url 'articles:article_csrf_avoidance_delete' article.id %}"
+        method="POST"
+        >
+        {% csrf_token %}
+        <button type="submit">send</button>    
+</div>
+<script>
+    function confirm_csrf_avoidance_delete(){
+        layer.open({
+            title: "文章删除",
+            content: "确认删除该文章吗？",
+            yes :function(index, layero){
+                    $(`form#csrf_avoidance_delete button`).onclick();
+                    layer.close();
+            },
+        })
+    }
+</script> 
+## 修改articles/views.py
+def article_csrf_avoidance_delete(request, id):
+    if request.method = "POST":
+        article = ArticlePost.objects.get(id=id)
+        article.delete()
+        return redirect("articles:articles_list")
+    else:
+        return HttpResponse("仅支持POST请求")
+## 修改articles/urls.py
+urlpatterns = [
+    # ...
+    path('article_csrf_avoidance_delete/<int:id>/', views.article_csrf_avoidance_delete, name='article_csrf_avoidance_delete')
+]
+```
+
+### 文章更新
+```
+# 增加视图article_update函数
+vim articles/views.py
+def article_update(request, id):
+    # take out the article
+    article = ArticlePost.objects.get(id=id)
+
+    # jude the method
+    if request.method == "POST":
+        article_post_form = ArticlePostForm(data=request.POST)
+        if article_post_form.isvalid():
+            # write the new body
+            article.title = request.POST['title']
+            article.body = request.POST['body']
+            article.save()
+            return redirect("articles:articles_list", id=id)
+        else:
+            return HttpResponse("表单内容有误，请重新填写")
+    else:
+        article_post_form = ArticlePostForm()
+        context = {'article': article, 'article_post_form': article_post_form}
+        return render(request, 'articles/update.html', context)
+# 添加该函数到urls
+vim articles/urls.py
+urlpatterns = [
+    # ...
+    path('article_update/<int:id>/', views.article_update, name='article_update')
+]
+# 增加templates articles/update.html
+{% extends "base.html" %} {% load static %}
+{% block title %} 更新文章 {% endblock title %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <br>
+            <form method="post" action=".">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title">文章标题</label>
+                    <!-- 在 value 属性中指定文本框的初始值为旧的内容，即 article 对象中的 title 字段 -->
+                    <input type="text" class="form-control" id="title" name="title" value="{{ article.title }}">
+                </div>
+                <div class="form-group">
+                    <label for="body">文章正文</label>
+                    <!-- 文本域不需要 value 属性，直接在标签体中嵌入数据即可 -->
+                    <textarea type="text" class="form-control" id="body" name="body" rows="12">{{ article.body }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">完成</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+# 在detail.html 中添加编辑入口
+|<a href="{% url 'articles:article_update' article.id %}"> 编辑文章 </a>
+```
