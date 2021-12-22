@@ -342,3 +342,236 @@ urlpatterns = [
 # 在detail.html 中添加编辑入口
 |<a href="{% url 'articles:article_update' article.id %}"> 编辑文章 </a>
 ```
+## 用户登录与登出
+```
+# 开启一个新的app
+python3 manage.py startapp userprofile
+cd userprofile
+touch urls.py
+
+# 编写登录表单
+vim userprofile/forms.py
+from django import forms
+from django.contrib.auth.models import User
+
+class UserLoginForm(forms.Form):
+    username=forms.CharField()
+    password=forms.CharField()
+    
+# 编写视图函数
+vim userprofile/views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login 
+from django.http import HttpResponse
+from .forms import UserLoginForm
+
+def user_login(request):
+    if request.method == "POST":
+        user_login_form = UserLoginForm(data=request.POST)
+        if user_login_form.is_valid():
+            data = user_login_form.cleaned_data
+            user = authenticate(username=data['username'], password=data['passsword'])
+            if user:
+                login(request, user)
+                return redirect("articles:articles_list")
+            else:
+                return HttpResponse("账号或密码输入错误")
+        else:
+            return HttpResponse("账号或密码不合法")
+    elif request.method == "GET":
+        user_login_form = UserLoginForm()
+        context = {'form': user_login_form}
+        return render(request,  'userprofile/login.html', context)
+    else:
+        return HttpResponse("请使用GET或者POST请求数据")
+        
+# 编写前端页面
+vim templates/userprofile/login.html
+{% extends "base.html" %} {% load static %}
+{% block title %} 登录 {% endblock title %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <br>
+            <form method="post" action=".">
+                {% csrf_token %}
+                <!-- 账号 -->
+                <div class="form-group">
+                    <label for="username">账号</label>
+                    <input type="text" class="form-control" id="username" name="username">
+                </div>
+                <!-- 密码 -->
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+                <!-- 提交按钮 -->
+                <button type="submit" class="btn btn-primary">提交</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+# 将登录加到header.html中去
+vim templates/header.html
+        {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+                    {{ user.username }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">退出登录</a>
+                </div>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'userprofile:login' %}">登录</a>
+            </li>
+        {% endif %}        
+
+# 将路径注册到urls中去
+vim userprofile/urls.py
+from django.urls import path
+from . import views 
+
+app_name='userprofile' 
+
+urlpatterns = [
+    path('login/', views.user_login, name='login'),
+]
+
+# 将userprofile 路由注册到根路由上(用include)
+vim blog/urls.py
+urlpattern = [
+    # ...
+    path('userprofile/', include('userprofile.urls', namespace='userprofile'))
+]
+
+# 将userprofile app注册到INSTALLED APP中 
+vim blog/settings.py
+INSTALLED APPS = [
+    # ...
+    'userprofile',
+]
+
+# userprofile 并没有改动models，因此不用迁移数据
+
+# 修改userprofile/views.py 实现用户登出
+from django.contrib.auth import authenticate, login, logout
+
+def user_logout(request):
+    logout(request)
+    return redirect("articles:articles_list")
+
+# 将路由注册到userproflie/urls.py中 
+urlpatterns = [
+    # ...
+    path('logout/', views.user_logout, name='logout')
+]
+
+# 更改header.html中的退出登录链接url
+href="{% url 'userprofile:logout' %}"
+```
+
+## 用户的注册
+```
+# 用户注册需要用到表单，所以继续修改userprofile/forms.py
+class UserRegisterForm()
+
+# 编写userprofile/views.py 实现注册功能
+def user_register(request):
+    if request.method == "POST":
+        user_register_form = UserRegisterForm(data=request.POST)
+        if user_register_form.is_valid():
+            new_user = user_register_form.save(commit=False)
+            new_user.set_password = (user_register_form.cleaned_data['password'])
+            new_user.save()
+            login(request, new_user)
+            return redirect("articles:articles_list")
+        else:
+            return HttpResponse("注册表单有误，请重新输入")
+    elif request.method == "GET":
+        user_register_form = UserRegisterForm()
+        context = {'form': user_register_form }
+        return render(request, 'userprofile/register.html', context)
+    else:
+        return HttpResponse("请使用GET或者POST请求数据")
+
+# 注册到 userprofile/urls.py中去
+urlpatterns = [
+    # ...
+    path('register/', views.user_register, name='register'),
+]
+
+# 修改前端，增加注册入口
+vim templates/userprofile/login.html 
+
+```
+
+## 用户的删除
+```
+# 用户视图与权限
+vim userprofile/views.py
+@login_required(login_url='/userprofile/login/')
+def user_delete(request, id):
+    if request.method == "POST":
+        user = User.objects.get(id=id)
+        if request.user == user:
+            logout(request)
+            user.delete()
+            return redirect("articles:articles_list")
+        else:
+            return HttpResponse("没有权限删除")
+    else:
+        return HttpResponse("仅接受POST请求")
+# 编写前端templates
+# 添加入口
+<a class="dropdown-item" href="#" onclick="user_delete()">删除用户</a>
+# 添加弹窗提醒用户
+{% if user.is_authenticated %}
+            <form 
+                    style="display:none;"
+                    id="user_delete"
+                    action="{% url 'userprofile:delete' user.id %}" 
+                    method="POST"
+                    >
+                    {% csrf_token %}
+                    <button type="submit">发送</button>
+            </form>
+            <script>
+                function user_delete(){
+                    layer.open({
+                        title: "确认删除",
+                        content:"确认删除用户资料吗",
+                        yes: function(index, layero){
+                                 $(`form#user_delete button`).click();
+                                 layer.close(index);
+                            },
+                   })
+                }
+            </script>
+{% endif %}
+```
+
+## 密码重置
+```
+# 在根路由下引入password-reset
+
+# 配置邮箱
+
+```
+
+## 拓展用户信息
+```
+```
+
+## 上传头像
+```
+```
+
+## 分页显示
+```
+```
+
+## 
