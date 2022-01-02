@@ -143,7 +143,7 @@
         hh ++;
         
         // 判断非空
-        if(hh << tt) not empty;
+        if(hh < tt) not empty;
         else empty;
         
         // 取队头
