@@ -201,3 +201,35 @@
         return 0;
     }
     ```
+4. Trie 树  
+    高效的存储和查找字符串集合的数据结构
+
+    ![trie_tree](img/trie_tree.png) 
+
+
+5. 并查集  
+    - 将两个集合合并
+    - 询问两个元素是否在一个集合当中
+
+    基本原理：
+    每个集合用一棵树表示，树根的编号就是整个集合的编号。每个节点存储它的父节点，p[x]表示x的父节点
+    
+    问题1：如何判断树根： if (p[x] == x)  
+    问题2：如何求x集合的编号: while (p[x] != x) x = p[x];  
+    问题3：如何合并两个集合： px 是x集合的编号， py是y集合的编号， p[x] = y
+    
+    优化问题2： 路径压缩
+    tips: 用字符串读字母
+6. 堆
+    - 插入一个树: heap[ ++ size] = x;up(size);
+    - 求集合当中最小值: heap[1]
+    - 删除最小值:  heap[1] = heap[size]; size--;down(1);
+    - 删除任意一个元素: heap[k] = heap[size]; size--; down(k); up(k);
+    - 修改任意一个元素: heap[k] = x; down(k); up(k);
+
+    ![heap_structure](img/heap_structure.png)
+
+7. 哈希表
+    - 存储结构
+    - 字符串哈希方式
+8. STL使用
