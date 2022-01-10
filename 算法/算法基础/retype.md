@@ -412,3 +412,405 @@ int main()
     return 0;
 }
 ```
+835 字符串统计(trie树)
+```c++
+#include <iostream>
+
+using namespace std;
+
+const int N = 100010;
+int son[N][26], cnt[N], idx;
+char str[N];
+
+void insert(char *str)
+{
+    int p = 0;
+    for (int i = 0; str[i]; i ++)
+    {
+        int u = str[i] - 'a';
+        if (!son[p][u]) son[p][u] = ++ idx;
+        p = son[p][u];
+    }
+    cnt[p] ++;
+}
+
+int query(char *str)
+{
+    int p = 0;
+    for (int i = 0; str[i]; i ++)
+    {
+        int u = str[i] - 'a';
+        if (!son[p][u]) return 0;
+        p = son[p][u];
+    }
+    return cnt[p];
+}
+int main()
+{
+    int n;
+    cin >> n;
+    
+    while (n --)
+    {
+        char op[2];
+        scanf("%s%s", op, str);
+        
+        if (op[0] == 'I') insert(str);
+        else printf("%d\n", query(str));
+    }
+    
+    return 0;
+}
+```
+
+836 合并集合(并查集)
+```c++
+#include <iostream>
+
+using namespace std;
+
+const int N = 100010;
+int p[N];
+
+int find(int x)
+{
+    if (p[x] != x) p[x] = find(p[x]);
+    return p[x];
+}
+
+int main()
+{
+    int n, m;
+    cin >> n >> m;
+    
+    for (int i = 1; i <= n; i ++) p[i] = i;
+    
+    while (m --)
+    {
+        char op[2];
+        int a, b;
+        scanf("%s%d%d", op, &a, &b);
+        
+        if (op[0] == 'M') p[find(a)] = find(b);
+        else
+        {
+            if (find(a) == find(b)) cout << "Yes" << endl;
+            else cout << "No" << endl;
+        }
+    }
+    return 0;
+}
+```
+
+838 堆排序
+```c++
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 100010;
+int h[N], cnt;
+
+void down(int u)
+{
+    int t = u;
+    if (u * 2 <= cnt && h[u * 2] < h[t]) t = u * 2;
+    if (u * 2 + 1 <= cnt && h[u * 2 + 1] < h[t]) t = u * 2 + 1;
+    if (u != t)
+    {
+        swap(h[u], h[t]);
+        down(t);
+    }
+}
+
+int main()
+{
+    int n, m;
+    cin >> n >> m;
+    
+    for (int i = 1; i <= n ; i ++) scanf("%d", &h[i]);
+    cnt = n;
+    
+    for (int i = n / 2; i; i --) down(i);
+    
+    while (m --)
+    {
+        printf("%d ", h[1]);
+        h[1] = h[cnt --];
+        down(1);
+    }
+    
+    return 0;
+}
+
+```
+
+143 最大异或数(trie树)
+```c++
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 100010;
+const int M = 31 * N;
+int son[M][2], idx;
+int a[N];
+
+void insert(int x)
+{
+    int p = 0;
+    for (int i = 30; i >= 0; i --)
+    {
+        int u = x >> i & 1;
+        if (!son[p][u]) son[p][u] = ++ idx;
+        p = son[p][u];
+    }
+}
+
+int query(int x)
+{
+    int p = 0, res = 0;
+    for (int i = 30; i >= 0; i --)
+    {
+        int u = x >> i & 1;
+        if (son[p][!u])
+        {
+            p = son[p][!u];
+            res = res * 2 + !u;
+        }
+        else 
+        {
+            p = son[p][u];
+            res = res * 2 + u;
+        }
+    }
+    return res;
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+    
+    for (int i = 0; i < n; i ++) scanf("%d", &a[i]);
+    
+    int res = 0;
+    for (int i = 0; i < n; i ++)
+    {
+        insert(a[i]);
+        int t = query(a[i]);
+        res = max (res, t ^ a[i]);
+    }
+    
+    printf("%d\n", res);
+    return 0;
+}
+
+```
+
+837 连通块中的数量(并查集)
+```c++
+#include <iostream>
+
+using namespace std;
+
+const int N = 100010;
+int p[N], cnt[N];
+int n, m;
+
+int find (int x)
+{
+    if (p[x] != x) p[x] = find(p[x]);
+    return p[x];
+}
+
+int main()
+{
+    cin >> n >> m;
+    for (int i = 1; i <= n; i ++)
+    {
+        p[i] = i;
+        cnt[i] = 1;
+    }
+    
+    while (m --)
+    {
+        string op;
+        int a, b;
+        cin >> op;
+        if (op == "C")
+        {
+            cin >> a >> b;
+            a = find(a), b = find(b);
+            if (a != b)
+            {
+                p[a] = b;
+                cnt[a] += cnt[b];
+            }
+        }
+        else if (op == "Q1")
+        {
+            cin >> a >> b;
+            if (find(a) == find(b)) cout << "Yes" << endl;
+            else cout << "No" << endl;
+        }
+        else 
+        {
+            cin >> a;
+            cout << cnt[find(a)] << endl;
+        }
+    }
+    return 0;
+}
+
+```
+
+240 食物链(利用并查集维护信息)
+```c++
+#include <iostream>
+
+using namespace std;
+
+const int N = 100010;
+int p[N], d[N];
+
+int find(int x)
+{
+    if (p[x] != x)
+    {
+        int t = find(p[x]);
+        d[x] += d[p[x]];
+        p[x] = t;
+    }
+    return p[x];
+}
+
+int main()
+{
+    int n, m;
+    cin >> n >> m;
+    
+    for (int i = 1; i <= n; i ++) p[i] = i;
+    
+    int res = 0;
+    while (m --)
+    {
+        int t, x, y;
+        cin >> t >> x >> y;
+        
+        if (x > n || y > n) res ++;
+        else 
+        {
+            int px = find(x), py = find(y);
+            if (t == 1)
+            {
+                if (px == py && (d[x] - d[y]) % 3) res ++;
+                else if (px != py)
+                {
+                    p[px] = py;
+                    d[px] = d[y] - d[x];
+                }
+            }
+            else 
+            {
+                if (px == py && (d[x] - d[y] - 1) % 3) res ++;
+                else if (px != py)
+                {
+                    p[px] = py;
+                    d[px] = d[y] - d[x] + 1;
+                }
+            }
+        }
+    }
+    cout << res << endl;
+    return 0;
+}
+```
+
+839 模拟堆
+```c++
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 100010;
+int h[N], hp[N], ph[N], cnt;
+
+void heap_swap(int a, int b)
+{
+    swap(ph[hp[a]], ph[hp[b]]);
+    swap(hp[a], hp[b]);
+    swap(h[a], h[b]);
+}
+
+void down(int u)
+{
+    int t = u;
+    if (u * 2 <= cnt && h[u * 2] < h[t]) t = u * 2;
+    if (u * 2 + 1 <= cnt && h[u * 2 + 1] < h[t]) t = u * 2 + 1;
+    if (u != t)
+    {
+        heap_swap(u, t);
+        down(t);
+    }
+}
+
+void up(int u)
+{
+    while (u / 2 && h[u / 2] > h[u])
+    {
+        heap_swap(u / 2, u);
+        u /= 2;
+    }
+}
+
+int main()
+{
+    int n, m = 0;
+    cin >> n;
+    while (n --)
+    {
+        string op;
+        int k, x;
+        
+        cin >> op;
+        if (op == "I")
+        {
+            cin >> x;
+            cnt ++, m ++;
+            ph[m] = cnt, hp[cnt] = m;
+            h[cnt] = x;
+            up(cnt);
+        }
+        else if (op == "PM") cout << h[1] << endl;
+        else if (op == "DM")
+        {
+            heap_swap(1, cnt);
+            cnt --;
+            down(1);
+        }
+        else if (op == "D")
+        {
+            cin >> k;
+            k = ph[k];
+            heap_swap(k, cnt);
+            cnt --;
+            down(k);
+            up(k);
+        }
+        else
+        {
+            cin >> k >> x;
+            k = ph[k];
+            h[k] = x;
+            down(k);
+            up(k);
+        }
+    }
+    return 0;
+}
+
+```
