@@ -162,5 +162,205 @@ int main()
     return 0;
 }
 
+```
+
+789 数的范围(整数二分，注意边界)
+```c++
+#include <iostream>
+
+using namespace std;
+
+const int N = 100010;
+int a[N];
+
+int main()
+{
+    int n, m;
+    cin >> n >> m;
+    for (int i = 0; i < n; i ++) cin >> a[i];
+    
+    while (m --)
+    {
+        int x;
+        cin >> x;
+        
+        int l = 0, r = n - 1;
+        while (l < r )
+        {
+            int mid = l + r >> 1;
+            if (a[mid] >= x) r = mid;
+            else l = mid + 1;
+        }
+        if (a[l] != x) cout << "-1 -1" << endl;
+        else
+        {
+            cout << l << ' ';
+            l = 0, r = n - 1;
+            while (l < r)
+            {
+                int mid = l + r + 1 >> 1;
+                if (a[mid] <= x) l = mid;
+                else r = mid - 1;
+            }
+            cout << l << endl;
+        }
+    }
+    return 0;
+}
+```
+
+790 数的三次方根(实数二分)
+```c++
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    double n;
+    cin >> n;
+    double l = -100, r = 100;
+    while (r - l > 1e-8)
+    {
+        double mid = (l + r) / 2;
+        if (mid * mid * mid >= n) r = mid;
+        else l = mid;
+    }
+    printf("%.6lf\n", l);
+    return 0;
+}
+```
+
+791 高精度加法
+```c++
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<int> add(vector<int> &a, vector<int> &b)
+{
+    if (a.size() < b.size()) return add(b, a);
+    vector<int> ans;
+    int t = 0;
+    for (int i = 0; i < a.size(); i ++)
+    {
+        t += a[i];
+        if (i < b.size()) t += b[i];
+        ans.push_back(t % 10);
+        t /= 10;
+    }
+    if (t) ans.push_back(1);
+    return ans;
+}
+
+int main()
+{
+    vector<int> A, B;
+    string a, b;
+    cin >> a >> b;
+    
+    for (int i = a.size() - 1; i >= 0; i --) A.push_back(a[i] - '0');
+    for (int i = b.size() - 1; i >= 0; i --) B.push_bakc(b[i] - '0');
+    
+    auto c = add(A, B);
+    
+    for (int i = c.size() - 1; i >= 0; i --) cout << c[i];
+    cout << endl;
+    return 0;
+}
+
+```
+
+792 高精度减法
+```c++
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool cmp(vector<int> &a, vector<int> &b)
+{
+    if (a.size() != b.size()) return a.size() > b.size();
+    for (int i = a.size() - 1; i >= 0; i --)
+        if (a[i] != b[i]) 
+            return a[i] > b[i];
+    return true;
+}
+
+vector<int> sub(vector<int> &a, vector<int> &b)
+{
+    vector<int> ans;
+    int t = 0;
+    for (int i = 0; i < a.size(); i ++)
+    {
+        t = a[i] - t;
+        if (i < b.size()) t -= b[i];
+        ans.push_back((t + 10 ) % 10);
+        if (t < 0) t = 1;
+        else t = 0;
+    }
+    while (ans.size() > 1 && ans.back() == 0) ans.pop_back();
+    return ans;
+}
+
+int main()
+{
+    vector<int> A, B;
+    string a, b;
+    cin >> a >> b;
+    
+    for (int i = a.size() - 1; i >= 0; i --) A.push_back(a[i] - '0');
+    for (int i = b.size() - 1; i >= 0; i --) B.push_back(b[i] - '0');
+    
+    vector<int> c;
+    if (cmp(A, B)) c = sub(A, B);
+    else
+    {
+        cout << '-';
+        c = sub(B, A);
+    }
+    
+    for (int i = c.size() - 1; i >= 0; i --) cout << c[i];
+    return 0;
+}
+
+```
+
+793 高精度乘法
+```c++
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<int> mul(vector<int> &a, int b)
+{
+    vector<int> ans;
+    int t = 0;
+    for (int i = 0; i < a.size() || t; i ++)
+    {
+        if (i < a.size()) t += a[i] * b;
+        ans.push_back(t % 10);
+        t /= 10;
+    }
+    while (ans.size() > 1 && ans.back() == 0) ans.pop_back();
+    return ans;
+}
+
+int main()
+{
+    vector<int> A;
+    string a;
+    int b;
+    cin >> a >> b;
+    
+    for (int i = a.size() - 1; i >= 0; i --) A.push_back(a[i] - '0');
+    
+    auto c = mul(A, b);
+    for (int i = c.size() - 1; i >= 0; i --) cout << c[i];
+    
+    return 0;
+}
 
 ```
