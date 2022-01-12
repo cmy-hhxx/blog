@@ -233,3 +233,84 @@
     - 存储结构
     - 字符串哈希方式
 8. STL使用
+    - vector 变长数组 倍增的思想
+        - size() 返回元素个数
+        - empty() 返回是否为空
+        - clear() 清空数组
+        - front()/back()
+        - push_back()/pop_back()
+        - begin()/end()
+        - []
+        - 支持比较运算
+    - pair<int, int> 二元组
+        - p.first/p.second
+        - 支持比较运算 字典序
+    - string 字符串
+        - size()/length() 返回字符串长度
+        - empty() 返回是否为空
+        - clear() 清空
+        - substr(开始的位置，长度) 子串
+        - c_str() 转换为字符串
+    - queue 队列
+        - size() 返回元素个数
+        - empty() 返回是否为空
+        - push() 向队尾插入一个元素
+        - pop() 弹出队头
+        - front() 返回队头
+        - back() 返回队尾
+    - priority_queue 优先队列 默认大根堆
+        - push() 插入一个元素
+        - top() 返回堆顶元素
+        - pop() 弹出堆顶元素
+        - 定义成小根堆：priority_queue<int, vector<int> greater<int>> q;
+    - stack 栈
+        - push() 向栈顶压入一个元素
+        - pop() 弹出栈顶
+        - top() 返回栈顶
+    - deque 双端队列
+        - size()
+        - empty()
+        - clear()
+        - front()/back()
+        - push_back()/pop_back()
+        - push_front()/pop_front()
+        - begin()/end()
+        - []
+    - set map multiset multimap 基于平衡二叉树(红黑树) 动态维护有序序列
+        - size()
+        - empty()
+        - clear()
+        - begin()/end() ++ --
+        - set multiset 
+            - insert()
+            - find()
+            - count()
+            - erase()
+                - 如果输入的是一个数x，删除所有x
+                - 如果输入的是一个迭代器， 删除迭代器
+            - lower_bound()/upper_bound()
+                - lower_bound() : 返回大于等于x的最小的数的迭代器
+                - upper_bound() : 返回大于x的最小的数的迭代器
+        - map multimap
+            - insert() 插入的数是一个pair
+            - erase() 输入的参数是pair或者迭代器
+            - find() 
+            - [] 时间复杂度O(logn)
+            - lower_bound()/upper_bound()
+    - unordered_set unordered_map unordered_mutiset unordered_mutimap
+        - 与上面类似，增删改查时间复杂度O(1)
+        - 不支持lower_bound()/upper_bound(), 迭代器的 ++ --
+    - bitset 压位
+        - bitset<10000> s;
+        - count() 返回有多少个1
+        - any() 判断是否至少有一个1
+        - none() 判断是否全为0
+        - set() 把所有位置1 set(k, v) 把第k位变成v
+        - reset() 把所有位置0
+        - flip() 等价与~ flip(k) 把第k为取反
+
+## 搜索和图论
+
+1. DFS
+2. BFS
+3. 图论

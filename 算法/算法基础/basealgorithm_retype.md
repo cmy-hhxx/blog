@@ -406,3 +406,155 @@ int main()
 }
 
 ```
+
+795 前缀和
+```c++
+#include <iostream>
+
+using namespace std;
+
+const int N = 100010;
+int a[N], s[N];
+
+int main()
+{
+    int n, m;
+    cin >> n >> m;
+    
+    for (int i = 1; i <= n; i ++)
+    {
+        cin >> a[i];
+        s[i] = s[i - 1] + a[i];
+    }
+    
+    while (m --)
+    {
+        int l, r;
+        cin >> l >> r;
+        cout << s[r] - s[l - 1] << endl;
+    }
+    return 0;
+}
+
+```
+
+796 子矩阵的和(二维前缀和)
+```c++
+#include <iostream>
+
+using namespace std;
+
+const int N = 1010;
+int a[N][N], s[N][N];
+
+int main()
+{
+    int n, m, q;
+    cin >> n >> m >> q;
+    for (int i = 1; i <= n; i ++ )
+        for (int j = 1; j <= m; j ++ )
+        {
+            cin >> a[i][j];
+            s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + a[i][j];
+        }
+    while (q --)
+    {
+        int x1, y1, x2, y2;
+        cin >> x1 >> y1 >> x2 >> y2;
+        cout << s[x2][y2] - s[x1 - 1][y2] - s[x2][y1 - 1] + s[x1 - 1][y1 - 1] << endl;
+    }
+    return 0;
+}
+
+```
+
+797 差分
+```c++
+#include <iostream>
+
+using namespace std;
+
+const int N = 100010;
+int a[N], b[N];
+
+void insert(int l, int r, int c)
+{
+    b[l] += c;
+    b[r + 1] -= c;
+}
+
+int main()
+{
+    int n, m;
+    cin >> n >> m;
+    for (int i = 1; i <= n; i ++ )
+    {
+        cin >> a[i];
+        insert(i, i, a[i]);
+    }
+    
+    while (m --)
+    {
+        int l, r, c;
+        cin >> l >> r >> c;
+        insert(l, r, c);
+    }
+    
+    for (int i = 1; i <= n; i ++ )
+    {
+        a[i] = a[i - 1] + b[i];
+        cout << a[i] << ' ';
+    }
+    return 0;
+}
+
+```
+
+798 差分矩阵(二维差分)
+```c++
+#include <iostream>
+
+using namespace std;
+
+const int N = 1010;
+int a[N][N], b[N][N];
+
+void insert(int x1, int y1, int x2, int y2, int c)
+{
+    b[x1][y1] += c;
+    b[x1][y2 + 1] -= c;
+    b[x2 + 1][y1] -= c;
+    b[x2 + 1][y2 + 1] += c;
+}
+
+int main()
+{
+    int n, m, q;
+    cin >> n >> m >> q;
+    for (int i = 1; i <= n; i ++ )
+        for (int j = 1; j <= m; j ++ )
+        {
+            cin >> a[i][j];
+            insert(i, j, i, j, a[i][j]);
+        }
+    while (q --)
+    {
+        int x1, y1, x2, y2, c;
+        cin >> x1 >> y1 >> x2 >> y2 >> c;
+        insert(x1, y1, x2, y2, c);
+    }
+    
+    for (int i = 1; i <= n; i ++)
+    {
+        for (int j = 1; j <= m; j ++ )
+        {
+            a[i][j] = a[i - 1][j] + a[i][j - 1] - a[i - 1][j - 1] + b[i][j];
+            cout << a[i][j] << ' ';
+        }
+        cout << endl;
+    }
+    
+    return 0;
+}
+
+```
