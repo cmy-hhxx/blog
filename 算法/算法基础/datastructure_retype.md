@@ -1,11 +1,10 @@
 826 单链表
 ```c++
-#include <iostream>
+#inclue <iostream>
 
 using namespace std;
 
 const int N = 100010;
-
 int head, e[N], ne[N], idx;
 
 void init()
@@ -18,16 +17,14 @@ void add_to_head(int x)
 {
     e[idx] = x;
     ne[idx] = head;
-    head = idx;
-    idx ++;
+    head = idx ++;
 }
 
-void add(int k, int x)
+void insert(int k, int x)
 {
     e[idx] = x;
     ne[idx] = ne[k];
-    ne[k] = idx;
-    idx ++;
+    ne[k] = idx ++;
 }
 
 void remove(int k)
@@ -39,37 +36,36 @@ int main()
 {
     int m;
     cin >> m;
-    
     init();
     
     while (m --)
     {
-        int k, x;
         char op;
+        int k, x;
         cin >> op;
-        
-        if (op == 'H')
+        if (op == 'I')
+        {
+            cin >> k >> x;
+            insert(k - 1, x);
+        }
+        else if (op == 'H')
         {
             cin >> x;
             add_to_head(x);
         }
-        else if (op == 'D')
+        else
         {
-            cin >> k ;
+            cin >> k;
             if (!k) head = ne[head];
-            remove(k - 1);
-        }
-        else 
-        {
-            cin >> k >> x;
-            add(k - 1, x);
+            else remove(k - 1);
         }
     }
-    for(int i = head; i != -1; i = ne[i]) cout << e[i] << ' ';
-    cout << endl;
+    
+    for (int i = head; i != -1; i = ne[i]) cout << e[i] << ' ';
     
     return 0;
 }
+
 ```
 
 827 双链表
