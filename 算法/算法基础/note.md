@@ -1,4 +1,4 @@
-# 算法基础
+# 算法基础 与 数据结构
 ## 基础算法
 1. 排序
 2. 二分
@@ -15,8 +15,93 @@
         ![single_list](img/single_list.png) 
         注意下标从0开始还是从1开始
         
+        ```c++
+        #include <iostream>
+        
+        using namespace std;
+        
+        const int N = 100010;
+        
+        // head 表示头结点的下标
+        // e[i] 表示结点i的值
+        // ne[i] 表示结点i的next指针是多少
+        // idx 表示当前已经用到了哪个点
+        int head, e[N], ne[N], idx;
+        
+        // 初始化
+        void init()
+        {
+            head = -1;
+            idx = 0;
+        }
+        
+        // 将x插入到头结点
+        void add_to_head(int x)
+        {
+            e[idx] = x;
+            ne[idx] = head;
+            head = idx;
+            idx ++;
+        }
+        
+        // 将x插入到k后
+        void add(int k, int x)
+        {
+            e[idx] = x;
+            ne[idx] = ne[k];
+            ne[k] = idx;
+            idx ++;
+        }
+        
+        // 将k后面一个节点删除
+        void remove(int k)
+        {
+            ne[k] = ne[ne[k]];
+        }
+        
+        int main()
+        {
+            int m;
+            cin >> m;
+            init();
+        
+            while(m --)
+            {
+                int k , x; 
+                char op;
+        
+                cin >> op;
+        
+                if (op == 'H')
+                {
+                    cin >> x;
+                    add_to_head(x);
+                }
+        
+                else if (op == 'D')
+                {
+                    cin >> k;
+                    if(!k) head = ne[head];
+                    else remove(k - 1);
+                }
+        
+                else
+                {
+                    cin >> k >> x;
+                    add(k - 1, x);
+                }
+            }
+            for(int i = head; i != -1; i = ne[i]) cout << e[i] << ' ';
+            cout << endl;
+            return 0;
+        }
+        ```
+        
+        
+        
     - 双链表：优化问题
         ![double_list](img/double_list.png) 
+
 2. 栈与队列（数组模拟）
     - 栈 先进后出
     - 单调栈
@@ -28,7 +113,33 @@
 
 3. KMP
     ![kmp](img/kmp.png) 
+
+    ```c++
+    // 模式串s，长度为m；模板串p，长度为n，下标均从1开始
+    char p[N], s[M];
+    int n, m, ne[N];
     
+    void kmp() {
+        // 构造ne数组
+        // ne[i] = j 表示 p[1:j] == p[i - j:i]
+        for (int i = 2, j = 0; i <= n; i ++ ) {
+            while (j && p[i] != p[j + 1]) j = ne[j];
+            if (p[i] == p[j + 1]) j ++ ;
+            ne[i] = j;
+        }
+    
+        for (int i = 1, j = 0; i <= m; i ++ ) {
+            while (j && s[i] != p[j + 1]) j = ne[j];
+            if (s[i] == p[j + 1]) j ++ ;
+            if (j == n) {
+                // p到头了，匹配成功
+            }
+        }
+    }
+    ```
+
+    
+
 4. Trie 树  
     高效的存储和查找字符串集合的数据结构
 
@@ -40,13 +151,34 @@
 
     基本原理：
     每个集合用一棵树表示，树根的编号就是整个集合的编号。每个节点存储它的父节点，p[x]表示x的父节点
-    
+
     问题1：如何判断树根： if (p[x] == x)  
     问题2：如何求x集合的编号: while (p[x] != x) x = p[x];  
     问题3：如何合并两个集合： px 是x集合的编号， py是y集合的编号， p[x] = y
-    
+
     优化问题2： 路径压缩
     tips: 用字符串读字母
+
+    ```c++
+    // pa[x] = y x所属集合的根节点是y
+    int pa[N];
+    
+    // 路径压缩的查找根节点操作
+    int find(int x) {
+        if (pa[x] != x) pa[x] = find(pa[x]);
+        return pa[x];
+    }
+    
+    // 初始化，最开始每个结点自身构成一个集合，它的根节点是自己
+    for (int i = 1; i <= n; i++) pa[i] = i;
+    
+    //合并两个集合
+    int r_a = find(a), r_b = find(b);
+    pa[r_a] = r_b;
+    ```
+
+    
+
 6. 堆
     - 插入一个树: heap[ ++ size] = x;up(size);
     - 求集合当中最小值: heap[1]
@@ -59,6 +191,7 @@
 7. 哈希表
     - 存储结构
     - 字符串哈希方式
+
 8. STL使用
     - vector 变长数组 倍增的思想
         - size() 返回元素个数
@@ -102,7 +235,6 @@
         - push_back()/pop_back()
         - push_front()/pop_front()
         - begin()/end()
-        - []
     - set map multiset multimap 基于平衡二叉树(红黑树) 动态维护有序序列
         - size()
         - empty()
@@ -140,33 +272,111 @@
 
 1. DFS
     深度优先搜索
+    
 2. BFS
     宽度优先搜索
+    
 3. 图论
     树与图的深度优先遍历
     树与图的广度优先遍历
     拓扑排序
+    
 4. 最短路
     - 单源最短路
         - 边权全为正数
             - 朴素Dijkstra算法
+            
+                ```c++
+                #include <iostream>
+                #include <cstring>
+                
+                using namespace std;
+                
+                const int N = 510;
+                int g[N][N];
+                int dist[N];
+                bool st[N];
+                
+                int n, m;
+                
+                int dijkstra()
+                {
+                    // initialize the dist to infinity
+                    memset(dist, 0x3f, sizeof dist); 
+                    
+                    // the dist of starting point is 0
+                    dist[1] = 0;
+                    
+                    // need n times iterations
+                    for (int i = 0; i < n; i ++ )
+                    {
+                        // in order to find the first point, it is necessary to set t = -1;
+                        // t is used to find the smallest dist point number among all st[] == false;
+                        int t = -1;
+                        
+                        // find out the closest point
+                        for (int j = 1; j <= n; j ++ )
+                        	if (!st[j] && (t == -1 || dist[t] > dist[j]))
+                                t = j;
+                        
+                        // st[] = true means this point is the closest point currently
+                        // from anonther way, st[] = true means this point had been used to update other dists
+                        st[t] = true;
+                        
+                        // update other point with t , if the distance through t is better
+                        for (int j = 1; j <= n; j ++ )
+                            dist[j] = min(dist[j], dist[t] + g[t][j]);
+                    }
+                    
+                    if (dist[n] == 0x3f3f3f3f) return -1;
+                    return dist[n];
+                }
+                
+                int main()
+                {
+                    scanf("%d%d", &n, &m);
+                    
+                    memset(g, 0x3f, sizeof g);
+                    
+                    while (m -- )
+                    {
+                        int a, b, w;
+                        scanf("%d%d%d", &a, &b, &w);
+                        // only take the smallest edge to elimate the duplicate edge and self-loops
+                        g[a][b] = min(g[a][b], w);
+                    }
+                    
+                    int distance = dijkstra();
+                    cout << distance << endl;
+                    
+                    return 0;
+                }
+                ```
+            
+                
+            
             - 堆优化Dijkstra算法
+            
         - 存在负边权
             - Bellman-Ford
             - SPFA
+        
     - 多元汇最短路
         - Floyd算法
-
+    
 5. 最小生成树
     - Prim算法
         - 朴素版(稠密图)
         - 堆优化版(稀疏图)
     - Kruskal算法(稀疏图)
+    
 6. 二分图
     - 染色法
     - 匈牙利算法
     
+
 ## 数学知识
+
 1. 数论
     - 质数
         - 定义
