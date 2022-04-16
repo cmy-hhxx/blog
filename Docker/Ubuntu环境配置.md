@@ -3,7 +3,7 @@
 1. 参见官网步骤，[docker_getstarted](https://docs.docker.com/engine/install/)。
 安装成功结果：
 
-![docker-success](img/docker-install.png)
+![	](img/docker-install.png)
 
 2. 安装完成后，需要进行一些必要的配置
 ```linux
