@@ -1,0 +1,82 @@
+#  csaap
+
+## chapter 1 overview
+
+### 1.1 Information is bits and context
+
+- The  program is stored in a file as **a sequence of bytes.** Each byte has an integer value that corresponds to some character.
+
+- All information in a system is represented as a bunch of bits.
+
+- The only thing that distinguishes different data objects is the **context** in which we view them.
+
+- **Approximations** that can behave in unexpected ways.
+
+***
+
+### 1.2 Programs are translated by other programs into different forms
+
+- The programs that perform the four phrases (preprocessor,complier,assembler,and linker) are known collectively as the compilation system.
+
+- Preprocessing phase: Read the contents of the system header file stdio.h and insert it directly into the program text. The result is another C program, typically with the .i suffix.
+
+- Compilation phase: The compiler translates the text file hello.i into the text file hello.s, which contains an assembly-language program. 
+
+- Assembly phase: The assembler translates hello.s into machine-language instructions, packages them in a form known as a **relocatable object program**, and stores the result in the object file hello.o
+
+- Link phase: The linker handles this merging. The result is the hello file, which is an executable object file that is ready to be loaded into memory and executed by the system.
+
+***
+
+### 1.3 It pays to understand how compilation systems work
+
+- Optimizing program performance
+
+- Understanding link-time errors
+
+- Avoiding security holes
+
+***
+
+### 1.4 Processors read and interpret instructions stored in memory
+
+- Hardware organization of a system
+
+- Buses
+
+- IO Devices
+
+- Main Memory
+
+- Processor
+
+- Running the hello program
+
+***
+
+### 1.5 Caches matter
+
+- To deal with the processor-memory gap, system designers include smaller,faster storage devices called cache memories that serve as **temporary staging areas** for information that the processor is likely to need in the near feature.
+
+***
+
+### 1.6 Storage devices form a hierarchy
+
+- As we move from the top of the hierarchy to the bottom, the devices become slower,larger,and less costly per byte.
+
+******
+
+### 1.7 The operating system manages the hardware
+
+- All attempts by an application program to manipulate the hardware must go through the operating system.
+
+- The operating system achieves both goals via the fundamental abstractions: processes, virtual memory, and files.
+
+***
+
+### 1.8 Systems communicate with each other systems using networks
+
+
+
+## chapter 2 
+
