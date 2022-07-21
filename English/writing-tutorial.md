@@ -27,7 +27,7 @@
 2. 后面的拓展句是对主题句各个方面的解释，论证，而不是无关的其他说明
 
 反例：
-> There are many things to be done to honor senior citizens. In cities, senior citizens should enjoy some privileges, such as special seats on buses, reduced fares for entertainment and traveling, and other benefits. They are so old and weak, and they need respect and care from other groups of the society to fullfill the dreams of the life. But medical care is often beyond their financial competence.
+> There are many things to be done to honor senior citizens. In cities, senior citizens should enjoy some privileges, such as special seats on buses, reduced fares for entertainment and traveling, and other benefits. They are so old and weak, and they need respect and care from other groups of the society to fulfill the dreams of the life. But medical care is often beyond their financial competence.
 
 可以看到，第一句作为主题句。但是从They are so old and weak 开始就是无关的其他说明，读者不知所云。
 
@@ -112,9 +112,9 @@
     - 现象法：Nowadays, our society is witnessing more and more {...}
     - 观点法：Researchers have established the concept that {...}
     - 正反对比论证法：There is a public controversy nowadays over the issue of {...} . Those who object to the idea argue that {...} . But people who favor {...} argue that {...} .
-    - 数据法：Such statistics present an undisputable fact that {...}
+    - 数据法：Such statistics present an indisputable fact that {...}
 3. 主体段落写法
-    - 并列法：first and formost; secondly to start with; besides in addition; finally
+    - 并列法：first and foremost; secondly to start with; besides in addition; finally
     - 比较对照法：分别列出某事物或观点的优点和缺点，在比较中得出结论
     - 因果法：分析几个构成事件的原因，来解释某个结果的形成
     - 批驳法：用充分的事实理由作论据，对开头段提出的观点进行批驳
